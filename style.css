@@ -6,6 +6,38 @@ html, body {
 .gridStyle {
     border: 1px solid rgb(212,212,212);
     width: 100%;
-    height: 1200px;
-    min-height: 100%;
+    /*height: 1200px;
+    min-height: 100%; */
+}
+
+/*
+.uiTopPanel {
+  line-height: 25px;
+}
+
+.uiCell  {
+  display : table-cell;
+  height: auto !important;
+  overflow:visible;
+  position: static;
+}
+
+.uiRow {
+  display : table-row;
+  height: auto !important;
+  position: static;
+}
+
+.uiCellText{
+  height: auto !important;
+  white-space: normal;
+  overflow:visible;
+}
+
+.uiGrid.unselectable {
+  margin-top: 10px;
+}
+*/
+.ui-grid-header{
+  margin-top: 60px;
 }

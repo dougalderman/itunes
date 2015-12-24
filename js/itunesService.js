@@ -11,24 +11,38 @@ app.service('itunesService', function($http, $q){
 
     //Code here
 
-    this.getData = function(artistName) {
+    this.getData = function(artist) {
 
       var deferred = $q.defer();
-
-      var url = 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK';
-      $http.get(url)
+    /*   $http.jsonp("https://itunes.apple.com/lookup", {
+          params: {
+            'callback': 'JSON_CALLBACK',
+            'id': 'some-app-id'
+          }
+      }).success(function(data) {
+          console.log(data);
+      }); */
+      // var url = 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK';
+      var url = 'https://itunes.apple.com/search?term=' + artist;
+      $http.jsonp(url, {
+        params: {
+          'callback': 'JSON_CALLBACK',
+          'id': 'some-app-id',
+        }
+      })
       .then(function(response) {
           console.log(response);
-          if (response.data.data) {
-            var parsedArray = response.data.data;
+          if (response.data.results) {
+            var respArray = response.data.results;
+            deferred.resolve(respArray)
           } else {
-            var parsedArray
+            var respArray;
           }
-        })
-        .catch(function(err) {
+      })
+      .catch(function(err) {
           deferred.reject(err);
-        })
-        return deferred.promise;
+      })
+      return deferred.promise;
 
     }
 
