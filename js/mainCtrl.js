@@ -7,22 +7,50 @@ app.controller('mainCtrl', function($scope, itunesService){
     $scope.gridOptions = {
         data: 'songData',
         /* height: '110px', */
-        rowHeight: 50,
+        rowHeight: 70,
         /* sortInfo: {fields: ['song', 'artist', 'collection', 'Type'], directions: ['asc']}, */
+        enableFiltering: false,
+        onRegisterApi: function(gridApi) {
+            $scope.gridApi = gridApi;
+            $scope.gridApi.grid.registerRowsProcessor( $scope.singleFilter, 200 );
+        },
         columnDefs: [
-          {field: 'play', displayName: 'Play', enableHiding: false, width: '50', cellTemplate: '<div class="ui-grid-cell-contents"><a target="_blank" href="{{COL_FIELD}}"><img src="http://www.icty.org/x/image/Miscellaneous/play_icon30x30.png"></a></div>'},
+          {field: 'play', displayName: 'Play', enableHiding: false, cellTemplate: '<div class="ui-grid-cell-contents"><a target="_blank" href="{{COL_FIELD}}"><img src="http://www.icty.org/x/image/Miscellaneous/play_icon30x30.png"></a></div>'},
     //      {field: 'play', displayName: 'Play', enableHiding: false, width: '50', cellTemplate: '<div class="ui-grid-cell-contents"><audio controls><src="{{COL_FIELD}}" type="audio/mp4"></audio></div>'},
-          {field: 'song', displayName: 'Song', width: '150', enableHiding: false},
+          {field: 'song', displayName: 'Song', enableHiding: false},
           {field: 'artist',  displayName: 'Artist', enableHiding: false},
-          {field: 'collection', displayName: 'Collection', enableHiding: false, width: '200'},
-          {field: 'albumArt',  displayName: 'Album Art', enableHiding: false, width: '90', cellTemplate: '<div class="ui-grid-cell-contents"><img ng-src="{{COL_FIELD}}"></div>'},
+          {field: 'collection', displayName: 'Collection', enableHiding: false},
+          {field: 'albumArt',  displayName: 'Album Art', enableHiding: false, cellTemplate: '<div class="ui-grid-cell-contents"><img ng-src="{{COL_FIELD}}"></div>'},
           {field: 'type', displayName: 'Type', enableHiding: false},
           {field: 'singlePrice', displayName: 'Single Price', enableHiding: false,},
           {field: 'collectionPrice', displayName: 'Collection Price', enableHiding: false,},
         ]
     };
 
+    $scope.filter = function() {
+      $scope.gridApi.grid.refresh();
+    };
 
+    $scope.singleFilter = function( renderableRows ){
+      if ($scope.filterData) { // if filter data
+        var matcher = new RegExp($scope.filterData, 'i');
+        renderableRows.forEach( function( row ) {
+          var match = false;
+          [ 'song', 'artist', 'collection', 'type']
+          .forEach(function( field ){
+            if (row.entity[field]) {  // if row.entity[field] not undefined
+              if ( row.entity[field].match(matcher) ){
+                match = true;
+              }
+            }
+          });
+          if ( !match ){
+            row.visible = false;
+          }
+        })
+      }
+      return renderableRows;
+    };
 
   //Our controller is what's going to connect our 'heavy lifting' itunesService with our view (index.html) so our user can see the results they get back from itunes.
 
@@ -41,11 +69,8 @@ app.controller('mainCtrl', function($scope, itunesService){
 
       itunesService.getData(artistName)
       .then(function(response) {
-          console.log('FROM MY CONTROLLER', response);
-          if (!response.length)
-            $scope.noResults = true;
-          else
-            $scope.noResults = false;
+  //        console.log('FROM MY CONTROLLER', response);
+          if (response.length)
             $scope.convertArray(response);
       })
       .catch(function(err) {
@@ -75,7 +100,7 @@ app.controller('mainCtrl', function($scope, itunesService){
               "song": arrayIn[i].trackName,
               "artist": arrayIn[i].artistName,
               "collection": arrayIn[i].collectionName,
-              "albumArt": arrayIn[i].artworkUrl30,
+              "albumArt": arrayIn[i].artworkUrl60,
               "type": arrayIn[i].kind,
               "singlePrice": arrayIn[i].trackPrice,
               "collectionPrice": arrayIn[i].collectionPrice

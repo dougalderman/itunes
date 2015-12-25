@@ -17,6 +17,7 @@
             <div class="form-group">
               <input type="text" class="form-control" ng-model="artist" placeholder="Artist Name" >
               <button class="btn btn-primary" ng-click="getSongData(artist)"> Submit </button>
+              <input type="text" class="form-control, filter" ng-model="filterData" ng-change="filter()" placeholder="Filter Data">
             </div>
           </form>
         </div>
@@ -25,7 +26,8 @@
     <br><br><br>
     <div class="panel panel-default">
       <div class="panel-heading"> Your Search Results:</div>
-     <div class="gridStyle" ui-grid="gridOptions" swap-image="defaultInfo.search"></div>
+      <!--<div class="gridStyle" ui-grid="gridOptions" ui-grid-resize-columns swap-image="defaultInfo.search"></div> -->
+      <div class="gridStyle" ui-grid="gridOptions" ui-grid-resize-columns></div>
     </div>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js"></script>
     <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.js"></script>

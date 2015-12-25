@@ -1,1 +1,1 @@
-var app = angular.module('itunes', ['ui.grid'])
+var app = angular.module('itunes', ['ui.grid', 'ui.grid.resizeColumns'])

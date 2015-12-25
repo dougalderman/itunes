@@ -31,7 +31,7 @@ app.service('itunesService', function($http, $q){
         }
       })
       .then(function(response) {
-          console.log(response);
+  //        console.log(response);
           if (response.data.results) {
             var respArray = response.data.results;
             deferred.resolve(respArray)
